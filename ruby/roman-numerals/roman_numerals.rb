@@ -1,40 +1,43 @@
 class Fixnum
-  NUMERALS = %w(I V X L C D M)
-  VALUES = [1, 5, 10, 50, 100, 500, 1000]
-  VALMAP = Hash[*VALUES.zip(NUMERALS).flatten]
-
-  MAGNITUDES = [1000, 100, 10]
+  ROMAN_NUMERALS = {
+    1 => "I",
+    4 => "IV",
+    5 => "V",
+    9 => "IX",
+    10 => "X",
+    40 => "XL",
+    50 => "L",
+    90 => "XC",
+    100 => "C",
+    400 => "CD",
+    500 => "D",
+    900 => "CM",
+    1000 => "M"
+  }
 
   def to_roman
     out = ""
-    remainder = MAGNITUDES.reduce(self) do |memo, mag|
-      out << find_numeral(memo, mag) 
+    remainder = [1000, 100, 10].reduce(self) do |memo, mag|
+      digit = memo / mag
+      unless digit == 0
+      out << roman_numeral_from_digit(digit, mag)
+      end
       memo - (memo / mag * mag)
     end
-    out << digit_to_numeral(remainder, 1) if remainder > 0
+    out << roman_numeral_from_digit(remainder, 1) if remainder > 0
     out
   end
 
   private
-  def find_numeral(number, magnitude)
-    digit = number / magnitude
-    digit == 0 ? "" : digit_to_numeral(digit, magnitude)
-  end
+  def roman_numeral_from_digit(d, m)
+    return ROMAN_NUMERALS[d*m] if ROMAN_NUMERALS[d*m]
+    numeral = ROMAN_NUMERALS[m]
+    next_numeral = ROMAN_NUMERALS[m*5]
 
-  def digit_to_numeral(d, m)
-    numeral = VALMAP[m]
-    next_numeral = VALMAP[m*5]
-    case d
-    when 1, 2, 3
+    if d < 5
       numeral * d
-    when 4
-      numeral + next_numeral
-    when 5
-      next_numeral
-    when 6, 7, 8
+    else
       next_numeral + (numeral * (d-5))
-    when 9
-      numeral + VALMAP[m * 10]
     end
   end
 end
