@@ -1,24 +1,24 @@
 (ns bob
-  (:require [clojure.string :as str]))
+  (:require [clojure.string :as string]))
 
-(defn shout
+(defn- shout?
   [remark]
   (and
-    (= (str/upper-case remark) remark)
-    (re-find #"[a-zA-Z]" remark)))
+    (= (string/upper-case remark) remark)
+    (not= (string/lower-case remark) remark)))
 
-(defn question
+(defn- question?
   [remark]
-  (re-find #"\?$" remark))
+  (.endsWith remark "?"))
 
-(defn silence
+(defn- silence?
   [remark]
-  (not (re-find #"\S" remark)))
+  (string/blank? remark))
 
 (defn response-for
   [remark]
   (cond
-    (shout remark) "Whoa, chill out!"
-    (question remark) "Sure."
-    (silence remark) "Fine. Be that way!"
+    (shout? remark) "Whoa, chill out!"
+    (question? remark) "Sure."
+    (silence? remark) "Fine. Be that way!"
     :else "Whatever."))
