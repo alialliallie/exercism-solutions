@@ -17,8 +17,8 @@
 
 (defn response-for
   [remark]
-  (cond
-    (shout? remark) "Whoa, chill out!"
-    (question? remark) "Sure."
-    (silence? remark) "Fine. Be that way!"
-    :else "Whatever."))
+  (condp #(%1 %2) remark
+    shout? "Whoa, chill out!"
+    question? "Sure."
+    silence? "Fine. Be that way!"
+    "Whatever."))
