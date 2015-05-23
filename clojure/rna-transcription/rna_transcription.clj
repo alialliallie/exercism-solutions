@@ -3,23 +3,18 @@
             [clojure.string :refer [join]]))
 
 (def dna->rna
-  {"G" "C"
-   "T" "A"
-   "A" "U"
-   "C" "G"})
-
-(defn- char-seq
-  [s]
-  (map str (seq s)))
+  {\G \C
+   \T \A
+   \A \U
+   \C \G})
 
 (defn- valid-rna?
   [chain]
   (subset?
-    (into #{} (char-seq chain))
+    (into #{} (seq chain))
     (into #{} (keys dna->rna))))
 
 (defn to-rna
   [chain]
-  (do
-    (assert (valid-rna? chain))
-    (join "" (map dna->rna (char-seq chain)))))
+  (assert (valid-rna? chain))
+  (join "" (map dna->rna (seq chain))))
