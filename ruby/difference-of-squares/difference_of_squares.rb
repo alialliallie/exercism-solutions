@@ -1,14 +1,15 @@
+# Difference of squares
 class Squares
   def initialize(num)
     @range = (1..num)
   end
 
   def square_of_sums
-    @range.reduce(:+) ** 2
+    @range.reduce(:+)**2
   end
 
   def sum_of_squares
-    @range.reduce {|s,n| s + n ** 2 }
+    @range.reduce { |a, e| a + e**2 }
   end
 
   def difference
