@@ -10,9 +10,10 @@ class Robot
   end
 
   private
+
   def rename
-    prefix = ("A".."Z").to_a.shuffle[0,2].join
-    designation = "%03d" % rand(999) 
+    prefix = ('A'..'Z').to_a.sample(2).join
+    designation = format('%03d', rand(999))
     @name = "#{prefix}#{designation}"
   end
 end
