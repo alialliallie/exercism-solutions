@@ -4,11 +4,10 @@ class Phrase
   end
 
   def word_count
-    @words.reduce({}) do |counts, word|
+    @words.reduce(Hash.new(0)) do |counts, word|
       word = clean(word)
       next counts if word.empty?
 
-      counts[word] ||= 0
       counts[word] = counts[word] + 1
       counts
     end
