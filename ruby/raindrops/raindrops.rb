@@ -1,20 +1,11 @@
 class Raindrops
+  FACTORS = { 3 => "Pling", 5 => "Plang", 7 => "Plong"}
+
   def self.convert(num)
     out = ""
-    if num % 3 == 0
-      out << "Pling"
-    end
-    if num % 5 == 0
-      out << "Plang"
-    end
-    if num % 7 == 0
-      out << "Plong"
-    end
 
-    unless out.empty?
-      out
-    else
-      "#{num}"
-    end
+    FACTORS.each { |f, s| out << s if num % f == 0 }
+
+    out.empty? ? num.to_s : out
   end
 end
