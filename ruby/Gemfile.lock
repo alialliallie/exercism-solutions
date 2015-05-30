@@ -54,3 +54,6 @@ DEPENDENCIES
   guard
   guard-minitest
   guard-shell
+
+BUNDLED WITH
+   1.10.2
