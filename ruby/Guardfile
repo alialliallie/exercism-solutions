@@ -34,10 +34,10 @@ end
 guard :shell do
   watch %r{^(.*)/(.*)\.rb$} do |m|
     unless m[0].match /test\.rb$/
-      `ruby #{m[1]}/#{m[2]}_test.rb` 
+      `ruby -rminitest/pride #{m[1]}/#{m[2]}_test.rb` 
     end
   end
   watch %r{^(.*)/(.*)_test\.rb$} do |m|
-    `ruby #{m[0]}`
+    `ruby -rminitest/pride #{m[0]}`
   end
 end
