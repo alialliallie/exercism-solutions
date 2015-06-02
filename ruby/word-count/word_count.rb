@@ -4,13 +4,11 @@ class Phrase
   end
 
   def word_count
-    @words.reduce(Hash.new(0)) do |counts, word|
-      word = clean(word)
-      next counts if word.empty?
-
-      counts[word] = counts[word] + 1
-      counts
-    end
+    @words.map {|w| clean(w)}
+          .reject(&:empty?)
+          .each_with_object(Hash.new(0)) do |word, counts|
+            counts[word] += 1
+          end
   end
 
   private
