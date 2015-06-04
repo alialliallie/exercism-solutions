@@ -8,10 +8,9 @@ class Fixnum
 
   def to_roman
     n = self
-    ROMAN_NUMERALS.reduce('') do |o, pair|
-      div, mod = n.divmod(pair[0])
-      n = mod
-      o << pair[1] * div
+    ROMAN_NUMERALS.reduce('') do |numeral, (arabic, roman)|
+      div, n = n.divmod(arabic)
+      numeral << roman * div
     end
   end
 end
