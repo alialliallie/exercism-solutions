@@ -1,17 +1,21 @@
 class PhoneNumber
   BAD = '0' * 10
+  PARTS = /^(\d{3})(\d{3})(\d{4})/
 
   def initialize(number)
     @original = number
+    @clean = @original.gsub(/\D/,'')
   end
 
   def number
-    clean = @original.gsub(/\D/,'')
-    return BAD if @original.match(/[a-zA-Z]/)
-    return BAD if clean.length < 10
-    return clean[1,10] if clean.length == 11 && clean.start_with?('1')
-    return BAD if clean.length > 10
-    clean
+    return BAD if @original.match(/[^0-9 ().-]/)
+    return BAD if too_short
+    return BAD if too_long
+    return BAD unless right_format
+
+    # This is the last ten characters to implicitly strip
+    # the starting 1
+    @clean[-10,10]
   end
 
   def area_code
@@ -19,7 +23,21 @@ class PhoneNumber
   end
 
   def to_s
-    _, area, prefix, rest = /^(\d{3})(\d{3})(\d{4})/.match(number).to_a
+    _, area, prefix, rest = PARTS.match(number).to_a
     "(#{area}) #{prefix}-#{rest}"
+  end
+
+  private
+
+  def too_short
+    @clean.length < 10
+  end
+
+  def too_long
+    @clean.length > 11
+  end
+
+  def right_format
+    @clean.length == 10 || @clean.start_with?('1')
   end
 end
