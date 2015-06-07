@@ -1,17 +1,12 @@
 class Array
   def keep
-    kept = []
-    self.each do |e|
-      kept << e if yield e
+    reduce([]) do |a, e|
+      a << e if yield e
+      a
     end
-    kept
   end
 
   def discard
-    kept = []
-    self.each do |e|
-      kept << e unless yield e
-    end
-    kept
+    keep {|e| !yield e}
   end
 end
