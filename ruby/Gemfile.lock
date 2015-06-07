@@ -55,3 +55,6 @@ DEPENDENCIES
   guard-minitest
   guard-shell
   rb-fsevent
+
+BUNDLED WITH
+   1.10.2
