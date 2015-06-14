@@ -1,5 +1,6 @@
-Exclude:
-  - *_test.rb
+AllCops:
+  Exclude:
+    - '**/*_test.rb'
 
 Style/Documentation:
   Enabled: false
