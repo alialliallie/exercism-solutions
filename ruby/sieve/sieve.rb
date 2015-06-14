@@ -5,20 +5,17 @@ class Sieve
   end
 
   def primes
-    primes = []
-    2.upto(@max).each do |i|
+    2.upto(@max).each_with_object([]) do |i, primes|
       next if @marks[i]
 
       primes << i
       mark(i)
     end
-    primes
   end
 
   private
+
   def mark(x)
-    x.step(@max, x).each do |i|
-      @marks[i] = true
-    end
+    x.step(@max, x) { |i| @marks[i] = true }
   end
 end
