@@ -1,14 +1,17 @@
 class Bst
   attr_reader :data, :left, :right
-  def initialize(data)
+  def initialize(data = nil)
     @data = data
   end
 
   def insert(n)
+    @data = n and return if @data.nil?
     if n <= data
-      insert_left(n)
+      @left ||= Bst.new
+      @left.insert(n)
     else
-      insert_right(n)
+      @right ||= Bst.new
+      @right.insert(n)
     end
   end
 
@@ -19,24 +22,6 @@ class Bst
     yield data
     if right
       right.each { |n| yield n }
-    end
-  end
-
-  private
-
-  def insert_left(n)
-    if @left
-      @left.insert(n)
-    else
-      @left = Bst.new(n)
-    end
-  end
-
-  def insert_right(n)
-    if @right
-      @right.insert(n)
-    else
-      @right = Bst.new(n)
     end
   end
 end
