@@ -11,8 +11,6 @@ class Anagram
   private
 
   def acceptable(word)
-    return false if word == @word
-
-    word.chars.sort == @word.chars.sort
+    word != @word && word.chars.sort == @word.chars.sort
   end
 end
