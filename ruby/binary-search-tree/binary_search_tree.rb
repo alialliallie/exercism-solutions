@@ -1,16 +1,16 @@
 class Bst
   attr_reader :data, :left, :right
-  def initialize(data = nil)
+  def initialize(data)
     @data = data
   end
 
   def insert(n)
-    # Allow leaf nodes to be assigned a value later
-    # so that inserts can chain through each parent
-    if @data.nil?
-      @data = n
+    if n <= data
+      left.insert(n) if left
+      @left ||= Bst.new(n)
     else
-      insert_child(n)
+      right.insert(n) if right
+      @right ||= Bst.new(n)
     end
   end
 
@@ -20,17 +20,5 @@ class Bst
     left.each { |n| yield n } if left
     yield data
     right.each { |n| yield n } if right
-  end
-
-  private
-
-  def insert_child(n)
-    if n <= data
-      @left ||= Bst.new
-      @left.insert(n)
-    else
-      @right ||= Bst.new
-      @right.insert(n)
-    end
   end
 end
