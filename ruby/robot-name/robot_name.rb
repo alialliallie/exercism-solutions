@@ -6,14 +6,21 @@ class Robot
   end
 
   def reset
-    @name = rename
+    begin
+      new_name = rename 
+    end while new_name == name
+    @name = new_name
   end
 
   private
 
+  LETTERS = ('A'..'Z').to_a
   def rename
-    prefix = ('A'..'Z').to_a.sample(2).join
     designation = format('%03d', rand(999))
-    @name = "#{prefix}#{designation}"
+    "#{prefix}#{designation}"
+  end
+
+  def prefix
+    [LETTERS.sample, LETTERS.sample].join
   end
 end
