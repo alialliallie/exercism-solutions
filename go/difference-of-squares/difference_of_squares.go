@@ -1,21 +1,15 @@
 package diffsquares
 
-import "math"
-
-func squareInt(n int) int {
-	return int(math.Pow(float64(n), 2))
-}
 func SquareOfSums(n int) int {
 	sum := (n * (n + 1)) / 2
-	return squareInt(sum)
+	return sum * sum
 }
 
-func SumOfSquares(n int) int {
-	acc := 0
+func SumOfSquares(n int) (acc int) {
 	for i := 1; i <= n; i++ {
-		acc += squareInt(i)
+		acc += i * i
 	}
-	return acc
+    return
 }
 
 func Difference(n int) int {
