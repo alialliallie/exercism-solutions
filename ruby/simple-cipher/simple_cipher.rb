@@ -8,14 +8,12 @@ class Cipher
   end
 
   def encode(text)
-    @text = text
     text.chars.zip(@key.chars.cycle)
       .map(&method(:substitute))
       .map(&:chr).join
   end
 
   def decode(text)
-    @text = text
     text.chars.zip(@key.chars.cycle)
       .each_with_object(true)
       .map(&method(:substitute))
