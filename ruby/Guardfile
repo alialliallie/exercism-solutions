@@ -23,21 +23,21 @@
 #
 # and, you'll have to watch "config/Guardfile" instead of "Guardfile"
 
-guard :minitest, test_folders: './' do
-  # with Minitest::Unit
-  watch(%r{^(.*)/(.*)_test\.rb$})
-  watch(%r{^(.*)/(.*)\.rb$})     { |m| 
-    "#{m[1]}/#{m[2]}_test.rb" unless m[0].match /test/
-  }
-end
+# guard :minitest, test_folders: './' do
+#   # with Minitest::Unit
+#   watch(%r{^(.*)/(.*)_test\.rb$})
+#   watch(%r{^(.*)/(.*)\.rb$})     { |m| 
+#     "#{m[1]}/#{m[2]}_test.rb" unless m[0].match /test/
+#   }
+# end
 
 guard :shell do
   watch %r{^(.*)/(.*)\.rb$} do |m|
     unless m[0].match /test\.rb$/
-      `ruby -rminitest/pride #{m[1]}/#{m[2]}_test.rb` 
+      `bundle exec ruby -rminitest/pride #{m[1]}/#{m[2]}_test.rb` 
     end
   end
   watch %r{^(.*)/(.*)_test\.rb$} do |m|
-    `ruby -rminitest/pride #{m[0]}`
+    `bundle exec ruby -rminitest/pride #{m[0]}`
   end
 end
