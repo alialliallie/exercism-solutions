@@ -5,25 +5,26 @@ class Scrabble
   end
 
   def initialize(word)
-    @word = (word || '').gsub(/[^A-z]/, '').downcase
+    @word = word.to_s.gsub(/\W/, '').downcase
   end
 
   def score
-    @word.chars.reduce(0) do |score, c|
-      score + Scrabble.points[c]
-    end
+    @word.chars.map(&method(:points)).reduce(0, &:+)
   end
 
-  def self.points
-    return @points if @points
-    @points = {}
-    %w(a e i o u l n r s t).each { |c| @points[c] = 1 }
-    %w(d g).each { |c| @points[c] = 2 }
-    %w(b c m p).each { |c| @points[c] = 3 }
-    %w(f h v w y).each { |c| @points[c] = 4 }
-    %w(k).each { |c| @points[c] = 5 }
-    %w(j x).each { |c| @points[c] = 8 }
-    %w(q z).each { |c| @points[c] = 10 }
-    @points
+  private
+
+  def points(c)
+    POINTS.find { |letters, p| letters.include? c }.last
   end
+
+  POINTS = {
+    'aeioulnrst' => 1,
+    'dg' => 2,
+    'bcmp' => 3,
+    'fhvwy' => 4,
+    'k' => 5,
+    'jx' => 8,
+    'qz' => 10
+  }
 end
