@@ -32,12 +32,12 @@
 # end
 
 guard :shell do
-  watch %r{^(.*)/(.*)\.rb$} do |m|
+  watch %r{^ruby/(.*)/(.*)\.rb$} do |m|
     unless m[0].match /test\.rb$/
-      `bundle exec ruby -rminitest/pride #{m[1]}/#{m[2]}_test.rb` 
+      `bundle exec ruby -rminitest/pride ruby/#{m[1]}/#{m[2]}_test.rb` 
     end
   end
-  watch %r{^(.*)/(.*)_test\.rb$} do |m|
+  watch %r{^ruby/(.*)/(.*)_test\.rb$} do |m|
     `bundle exec ruby -rminitest/pride #{m[0]}`
   end
 end
