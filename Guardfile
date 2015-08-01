@@ -40,4 +40,16 @@ guard :shell do
   watch %r{^ruby/(.*)/(.*)_test\.rb$} do |m|
     `bundle exec ruby -rminitest/pride #{m[0]}`
   end
+
+  watch %r{^javascript/(.*)/(.*)\.js$} do |m|
+    unless m[0].match /_test\.spec\.js$/
+      puts "\n"
+      `jasmine-node javascript/#{m[1]}/#{m[2]}_test.spec.js` 
+    end
+  end
+  watch %r{^javascript/(.*)/(.*)_test\.spec\.js$} do |m|
+    puts "\n"
+    `jasmine-node #{m[0]}` 
+  end
+    
 end
