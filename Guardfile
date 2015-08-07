@@ -26,30 +26,37 @@
 # guard :minitest, test_folders: './' do
 #   # with Minitest::Unit
 #   watch(%r{^(.*)/(.*)_test\.rb$})
-#   watch(%r{^(.*)/(.*)\.rb$})     { |m| 
+#   watch(%r{^(.*)/(.*)\.rb$})     { |m|
 #     "#{m[1]}/#{m[2]}_test.rb" unless m[0].match /test/
 #   }
 # end
 
 guard :shell do
+  # Ruby
   watch %r{^ruby/(.*)/(.*)\.rb$} do |m|
     unless m[0].match /test\.rb$/
-      `bundle exec ruby -rminitest/pride ruby/#{m[1]}/#{m[2]}_test.rb` 
+      `bundle exec ruby -rminitest/pride ruby/#{m[1]}/#{m[2]}_test.rb`
     end
   end
   watch %r{^ruby/(.*)/(.*)_test\.rb$} do |m|
     `bundle exec ruby -rminitest/pride #{m[0]}`
   end
 
+  # Javascript
   watch %r{^javascript/(.*)/(.*)\.js$} do |m|
     unless m[0].match /_test\.spec\.js$/
       puts "\n"
-      `jasmine-node javascript/#{m[1]}/#{m[2]}_test.spec.js` 
+      `jasmine-node javascript/#{m[1]}/#{m[2]}_test.spec.js`
     end
   end
   watch %r{^javascript/(.*)/(.*)_test\.spec\.js$} do |m|
     puts "\n"
-    `jasmine-node #{m[0]}` 
+    `jasmine-node #{m[0]}`
   end
-    
+
+  # Clojure
+
+  watch %r{^clojure/(.*)/(.*)\.clj$} do |m|
+    `cd clojure/#{m[1]}; lein test`
+  end
 end
