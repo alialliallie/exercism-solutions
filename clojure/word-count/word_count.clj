@@ -15,6 +15,4 @@
 (defn word-count
   [phrase]
   (let [words (prepare phrase)]
-    (into {}
-          (map (fn [[word list]] [word (count list)])
-               (group-by identity words)))))
+    (frequencies words)))
