@@ -4,7 +4,7 @@ class Crypto
   end
 
   def normalize_plaintext
-    @normalized ||= @text.downcase.gsub(/[\W_ ]/,'')
+    @normalized ||= @text.downcase.gsub(/[\W_ ]/, '')
   end
 
   def size
@@ -12,14 +12,10 @@ class Crypto
   end
 
   def plaintext_segments
-    unless @segments
-      length = normalize_plaintext.length
-      @segments = []
-      0.step(by: size, to: length - 1) { |start|
-        @segments << normalize_plaintext[start, size]
-      }
+    length = normalize_plaintext.length
+    @segments ||= 0.step(by: size, to: length - 1).map do |start|
+      normalize_plaintext[start, size]
     end
-    @segments
   end
 
   def ciphertext
@@ -27,7 +23,7 @@ class Crypto
   end
 
   def normalize_ciphertext
-    by_column.map { |set| set.join }.join(' ')
+    by_column.map(&:join).join(' ')
   end
 
   private
