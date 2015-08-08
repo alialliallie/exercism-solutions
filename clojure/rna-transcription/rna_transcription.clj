@@ -1,6 +1,4 @@
-(ns rna-transcription
-  (:require [clojure.set :refer [subset?]]
-            [clojure.string :refer [join]]))
+(ns rna-transcription)
 
 (def dna->rna
   {\G \C
@@ -10,11 +8,9 @@
 
 (defn- valid-rna?
   [chain]
-  (subset?
-    (into #{} (seq chain))
-    (into #{} (keys dna->rna))))
+  (every? #(dna->rna %) (seq chain)))
 
 (defn to-rna
   [chain]
   (assert (valid-rna? chain))
-  (join "" (map dna->rna (seq chain))))
+  (apply str (map dna->rna (seq chain))))
