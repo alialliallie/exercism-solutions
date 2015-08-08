@@ -3,13 +3,16 @@
 
 (defn- letter-count
   [word]
-  (into {}
-        (map (fn [[letter ls]] [letter (count ls)])
-             (group-by identity 
-                       (seq (s/lower-case word))))))
+  (frequencies (seq (s/lower-case word))))
+
+(defn- anagram?
+  [word candidate]
+  (let [w (s/lower-case word)
+        c (s/lower-case candidate)]
+    (and (not= w c)
+         (= (letter-count w) (letter-count c)))))
 
 (defn anagrams-for
   [word candidates]
   (let [word-count (letter-count word)]
-    (filter #(apply not= (map s/lower-case [word %]))
-            (filter #(= word-count (letter-count %)) candidates))))
+    (filter (partial anagram? word) candidates)))
