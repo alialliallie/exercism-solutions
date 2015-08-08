@@ -6,11 +6,12 @@
    \A \U
    \C \G})
 
-(defn- valid-rna?
-  [chain]
-  (every? #(dna->rna %) (seq chain)))
+(defn- valid-dna?
+  [dna]
+  (every? #(dna->rna %) dna))
 
 (defn to-rna
   [chain]
-  (assert (valid-rna? chain))
-  (apply str (map dna->rna (seq chain))))
+  (let [dna (seq chain)]
+    (assert (valid-dna? dna))
+    (apply str (map dna->rna dna))))
