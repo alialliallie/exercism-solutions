@@ -62,7 +62,7 @@ guard :shell do
   # Erlang
   watch %r{^erlang/(.*)/(.*)\.erl$} do |m|
     unless m[2].match /test/
-      `cd erlang/#{m[1]}; erl -make; erl -noshell -eval "eunit:test(#{m[1]}, [verbose])" -s init stop`
+      `cd erlang/#{m[1]} && erl -make && erl -noshell -eval "eunit:test(#{m[2]}, [verbose])" -s init stop`
     end
   end
 end
