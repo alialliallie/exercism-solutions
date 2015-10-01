@@ -55,8 +55,14 @@ guard :shell do
   end
 
   # Clojure
-
   watch %r{^clojure/(.*)/(.*)\.clj$} do |m|
     `cd clojure/#{m[1]}; lein test`
+  end
+
+  # Erlang
+  watch %r{^erlang/(.*)/(.*)\.erl$} do |m|
+    unless m[2].match /test/
+      `cd erlang/#{m[1]}; erl -make; erl -noshell -eval "eunit:test(#{m[1]}, [verbose])" -s init stop`
+    end
   end
 end
