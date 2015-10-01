@@ -4,7 +4,6 @@
 accumulate(Fn, List) -> 
     accumulate(Fn, List, []).
 
-accumulate(_, [], Acc) -> Acc;
+accumulate(_, [], Acc) -> lists:reverse(Acc);
 accumulate(Fn, [H|T], Acc) -> 
-    accumulate(Fn, T, Acc ++ [Fn(H)]).
-
+    accumulate(Fn, T, [Fn(H)|Acc]).
