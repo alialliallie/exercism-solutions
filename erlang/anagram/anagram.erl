@@ -1,17 +1,12 @@
 -module(anagram).
 -export([find/2]).
 
-find(Word, Anagrams) -> find(Word, Anagrams, []).
+find(Word, Anagrams) -> 
+    lists:filter(anagram_of(Word), Anagrams).
 
-find(_, [], Acc) -> lists:reverse(Acc);
-find(Word, [H|Rest], Acc) ->
-    Matches = anagram(Word, H),
-    case Matches of 
-        true -> find(Word, Rest, [H|Acc]);
-        false -> find(Word, Rest, Acc)
+anagram_of(Word) -> 
+    fun (Anagram) ->
+            string:to_lower(Word) =/= string:to_lower(Anagram) andalso
+            string:equal(lists:sort(string:to_lower(Word)),
+                         lists:sort(string:to_lower(Anagram)))
     end.
-
-anagram(Word, Anagram) -> 
-    string:to_lower(Word) =/= string:to_lower(Anagram) andalso
-    string:equal(lists:sort(string:to_lower(Word)),
-                 lists:sort(string:to_lower(Anagram))).
