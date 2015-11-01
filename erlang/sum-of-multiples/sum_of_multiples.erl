@@ -4,14 +4,12 @@
 sumOfMultiplesDefault(N) -> sumOfMultiples([3,5], N).
 
 sumOfMultiples(Multiples, N) ->
-    sumOfMultiples(Multiples, N - 1, 0).
+    lists:sum(only_factors(Multiples, N)).
 
-sumOfMultiples(_, 0, Acc) -> Acc;
-sumOfMultiples(Multiples, N, Acc) ->
-    Factor = lists:any(fun (M) -> N rem M =:= 0 end, Multiples),
-    sum_if(Factor, Multiples, N, Acc).
+only_factors(Multiples, N) ->
+    lists:filter(factor(Multiples), lists:seq(1, N - 1)).
 
-sum_if(true, Multiples, N, Acc) ->
-    sumOfMultiples(Multiples, N - 1, Acc + N);
-sum_if(false, Multiples, N, Acc) ->
-    sumOfMultiples(Multiples, N - 1, Acc).
+factor(Multiples) ->
+    fun (N) ->
+            lists:any(fun (M) -> N rem M =:= 0 end, Multiples)
+    end.
