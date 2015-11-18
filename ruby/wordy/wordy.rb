@@ -6,62 +6,30 @@ class WordProblem
 
   def answer
     tokens = tokenize(input)
-    fail ArgumentError unless tokens.any? { |t| OPS.key? t }
-    evaluate(parse(tokens))
+    fail ArgumentError unless tokens.any? { |t| OPS.value? t }
+    evaluate(tokens)
   end
 
   private
 
-  Oper = Struct.new(:operator, :precedence) do
-    # Always assume left associative given the tested operations
-    def takes_precedence?(other)
-      return false unless other
-      precedence <= other.precedence
-    end
-
-    def to_s
-      "#{operator}"
-    end
-  end
-
   OPS = {
-    'plus' => Oper.new(:+, 0),
-    'minus' => Oper.new(:-, 0),
-    'multiplied' => Oper.new(:*, 0),
-    'divided' => Oper.new(:/, 0)
+    'plus' => :+,
+    'minus' => :-,
+    'multiplied' => :*,
+    'divided' => :/
   }
-  # We're going to do a shunting parser here
 
   # Simple tokenizer, numbers or operwords
   def tokenize(text)
-    text.gsub('?', '')
+    text.delete('?')
       .split(' ')
       .keep_if { |t| OPS.key?(t) || t.match(/\A-?\d+\Z/) }
-  end
-
-  # Parse into a postfix notation because easier
-  def parse(tokens)
-    result = []
-    opers = []
-    tokens.each do |token|
-      if token.match(/\A-?\d+\Z/)
-        result.push token.to_i
-      else
-        oper = OPS[token]
-        result.push(opers.pop) if oper.takes_precedence?(opers.last)
-        opers.push(oper)
-      end
-    end
-    result + opers.reverse
+      .map { |token| token.match(/\A-?\d+\Z/) ? token.to_i : OPS[token] }
   end
 
   def evaluate(operations)
-    operations.each_with_object([]) do |op, stack|
-      if op.respond_to? :operator
-        stack.push(stack.pop(2).reduce(op.operator))
-      else
-        stack.push op
-      end
-    end.pop
+    operations[1..-1].reduce(operations[0]) do |result, item|
+      item.is_a?(Symbol) ? result.method(item) : result.call(item)
+    end
   end
 end
