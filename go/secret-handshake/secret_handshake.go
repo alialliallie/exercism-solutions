@@ -13,22 +13,23 @@ func Handshake(code int) []string {
 	if code < 0 {
 		return a
 	}
-	if code&wink == wink {
-		a = append(a, "wink")
-	}
-	if code&blink == blink {
-		a = append(a, "double blink")
-	}
-	if code&closed == closed {
-		a = append(a, "close your eyes")
-	}
-	if code&jump == jump {
-		a = append(a, "jump")
-	}
+
+	a = addAction(code, wink, "wink", a)
+	a = addAction(code, blink, "double blink", a)
+	a = addAction(code, closed, "close your eyes", a)
+	a = addAction(code, jump, "jump", a)
+
 	if code&reverse == reverse {
 		a = reversed(a)
 	}
 	return a
+}
+
+func addAction(code, flag int, action string, list []string) []string {
+	if code&flag == flag {
+		return append(list, action)
+	}
+	return list
 }
 
 func reversed(actions []string) []string {
