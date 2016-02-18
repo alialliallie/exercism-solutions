@@ -10,8 +10,8 @@
   "Flip from single {score words} map to multiple {word score} maps."
   [values] 
   (let [[score words] values]
-    (into {} (map (fn [word] {word score}) (clean words)))))
+    (map (fn [word] {word score}) (clean words))))
 
 (defn transform
   [score-table]
-  (into {} (map flip-values score-table)))
+  (into {} (flatten (map flip-values score-table))))
