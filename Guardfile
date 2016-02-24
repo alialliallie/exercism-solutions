@@ -27,7 +27,7 @@ guard :shell do
   end
 
   # Clojure
-  watch %r{^clojure/(.*)/(.*)\.clj$} do |m|
+  watch %r{^clojure/(.*)/src/(.*)\.clj$} do |m|
     `cd clojure/#{m[1]} && lein test`
   end
 
