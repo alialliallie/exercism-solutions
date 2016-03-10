@@ -14,12 +14,11 @@
 allergies(0) -> [];
 allergies(X) ->
     lists:foldl(fun ({N, V}, A) ->
-                        Match = (V band X) =:= V,
-                        case Match of
-                             true -> A ++ [N];
-                             false -> A
-                        end
+                        allergic_if((V band X) =:= V, A, N)
                 end, [], ?Allergies).
+
+allergic_if(true, A, N) -> A ++ [N];
+allergic_if(false, A, _) -> A.
 
 is_allergic_to(N, X) -> 
     V = proplists:get_value(N, ?Allergies),
