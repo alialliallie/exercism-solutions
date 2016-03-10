@@ -12,14 +12,14 @@
          {'cats', 128}]).
 
 allergies(0) -> [];
-allergies(X) ->
-    lists:foldl(fun ({N, V}, A) ->
-                        allergic_if((V band X) =:= V, A, N)
+allergies(Total) ->
+    lists:foldl(fun ({Name, Flag}, Acc) ->
+                        allergic_if((Flag band Total) =:= Flag, Acc, Name)
                 end, [], ?Allergies).
 
-allergic_if(true, A, N) -> A ++ [N];
-allergic_if(false, A, _) -> A.
+allergic_if(true, Acc, Name) -> Acc ++ [Name];
+allergic_if(false, Acc, _) -> Acc.
 
-is_allergic_to(N, X) -> 
-    V = proplists:get_value(N, ?Allergies),
-    (V band X) =:= V.
+is_allergic_to(Name, Total) ->
+    Flag = proplists:get_value(Name, ?Allergies),
+    (Flag band Total) =:= Flag.
