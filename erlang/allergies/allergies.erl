@@ -12,13 +12,17 @@
          {'cats', 128}]).
 
 allergies(0) -> [];
-allergies(Total) ->
-    lists:foldl(fun ({Name, Flag}, Acc) ->
-                        allergic_if((Flag band Total) =:= Flag, Acc, Name)
-                end, [], ?Allergies).
+allergies(Subject) ->
+    lists:reverse(lists:foldl(allergy_reducer(Subject), [], ?Allergies)).
 
-allergic_if(true, Acc, Name) -> Acc ++ [Name];
-allergic_if(false, Acc, _) -> Acc.
+allergy_reducer(Subject) ->
+    fun ({Allergen, Flag}, Acc) ->
+            add_allergy(Flag band Subject, Acc, Allergen)
+    end.
+
+
+add_allergy(0, A, _) -> A;
+add_allergy(_, A, N) -> [N|A].
 
 is_allergic_to(Name, Total) ->
     Flag = proplists:get_value(Name, ?Allergies),
