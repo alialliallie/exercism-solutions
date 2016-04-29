@@ -17,12 +17,12 @@ schedule(Year, Month, Weekday, last) ->
 %% Find the first occurrance of the weekday in the month and then add a number
 %% of weeks. This is fine because all months have at least 28 days!
 nth(Year, Month, Weekday, N) ->
-    D = first_day(Year, Month, Weekday, [1, 2, 3, 4, 5, 6, 7]),
+    D = first_day(Year, Month, Weekday, lists:seq(1, 7)),
     Offset = 7 * (N - 1),
     {Year, Month, D + Offset}.
 
 teenthday(Year, Month, Weekday) ->
-    Date = first_day(Year, Month, Weekday, [13, 14, 15, 16, 17, 18, 19]),
+    Date = first_day(Year, Month, Weekday, lists:seq(13, 19)),
     {Year, Month, Date}.
 
 %% Walk backwards from the end of the month until we hit the desired weekday.
