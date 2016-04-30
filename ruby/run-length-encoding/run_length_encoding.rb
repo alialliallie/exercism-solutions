@@ -3,7 +3,7 @@ module RunLengthEncoding
 
   def self.encode(input)
     input
-      .chars
+      .each_char
       .slice_when { |a, b| a != b }
       .reduce('') { |a, e| a << compact(e) }
   end
