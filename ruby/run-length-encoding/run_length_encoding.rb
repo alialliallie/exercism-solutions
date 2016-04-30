@@ -5,28 +5,25 @@ module RunLengthEncoding
     input
       .chars
       .slice_when { |a, b| a != b }
-      .flat_map(&method(:run_to_pair))
-      .join
+      .reduce('') { |a, e| a << compact(e) }
   end
 
   CODE_REGEX = /(\d*)(\D)/
   def self.decode(input)
     input
       .scan(CODE_REGEX)
-      .map(&method(:pair_to_run))
-      .join
+      .reduce('') { |a, e| a << expand(e) }
   end
 
-  def self.run_to_pair(run)
+  def self.compact(run)
     if run.length == 1
-      [run[0]]
+      run.first
     else
-      [run.length, run[0]]
+      "#{run.length}#{run.first}"
     end
   end
 
-  def self.pair_to_run((i, c))
-    len = i == '' ? 1 : i.to_i
-    c * len
+  def self.expand((num, char))
+    char * (num == '' ? 1 : num.to_i)
   end
 end
