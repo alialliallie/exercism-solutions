@@ -4,26 +4,21 @@ module RunLengthEncoding
   def self.encode(input)
     input
       .each_char
-      .slice_when { |a, b| a != b }
+      .slice_when(&:!=)
       .reduce('') { |a, e| a << compact(e) }
   end
 
-  CODE_REGEX = /(\d*)(\D)/
   def self.decode(input)
     input
-      .scan(CODE_REGEX)
-      .reduce('') { |a, e| a << expand(e) }
+      .scan(/(\d*)(\D)/)
+      .reduce('') { |a, (num, char)| a << expand(num, char) }
   end
 
   def self.compact(run)
-    if run.length == 1
-      run.first
-    else
-      "#{run.length}#{run.first}"
-    end
+    "#{run.length if run.length > 1}#{run.first}"
   end
 
-  def self.expand((num, char))
+  def self.expand(num, char)
     char * (num == '' ? 1 : num.to_i)
   end
 end
