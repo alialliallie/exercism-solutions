@@ -7,11 +7,9 @@ class Game
   end
 
   def roll(pins)
-    raise 'Pins must have a value from 0 to 10' if 0 > pins || pins > 10
-    raise 'Should not be able to roll after game is over.' if over?
-    # add to scoring frame
+    ensure_valid pins
+    # Do not change state unless valid!
     @current_frame << pins
-    raise 'Pin count exceeds pins on the lane' if over_roll?
     push_frame if done_frame?
   end
 
@@ -19,22 +17,33 @@ class Game
     ensure_over
     bonus_rolls = @frames.length == 11
     total = 0
-    until @frames.empty?
-      frame = @frames.shift
+    # No mutation when scoring
+    frames = @frames.dup
+    until frames.empty?
+      frame = frames.shift
       total += if strike? frame
-                 10 + next_two_rolls.reduce(&:+)
+                 10 + next_two_rolls(frames).reduce(&:+)
                elsif spare? frame
-                 10 + @frames.first[0]
+                 10 + frames.first[0]
                else
                  frame.reduce(&:+)
                end
-      break if bonus_rolls && @frames.length == 1
+      break if bonus_rolls && frames.length == 1
     end
     total
   end
 
   private
 
+  # Fail if pins rolled is not valid for current game state
+  def ensure_valid(pins)
+    raise 'Pins must have a value from 0 to 10' if 0 > pins || pins > 10
+    raise 'Should not be able to roll after game is over.' if over?
+    raise 'Pin count exceeds pins on the lane' if over_roll?(pins)
+  end
+
+  # Fail if game is not actually over
+  # Otherwise, mark game as finished
   def ensure_over
     if @frames.length < 10
       raise 'Score cannot be taken until the end of the game.'
@@ -53,8 +62,7 @@ class Game
         @current_frame.length == 1
       end
     else
-      @current_frame.length == 2 ||
-        @current_frame[0] == 10
+      @current_frame.length == 2 || @current_frame[0] == 10
     end
   end
 
@@ -63,8 +71,8 @@ class Game
     @current_frame = []
   end
 
-  def next_two_rolls
-    @frames.take(2).flatten.take(2)
+  def next_two_rolls(frames)
+    frames.take(2).flatten.take(2)
   end
 
   def strike?(frame)
@@ -75,10 +83,13 @@ class Game
     frame[0] + frame[1] == 10
   end
 
-  def over_roll?
-    over_frame = @current_frame.reduce(&:+) > 10
+  # Check if the pins rolled would overflow the current frame
+  def over_roll?(pins)
+    return false if @current_frame.empty?
+
+    over_frame = @current_frame[0] + pins > 10
     if @frames.length == 10
-      over_frame && @current_frame != [10, 10]
+      over_frame && @current_frame != [10]
     else
       over_frame
     end
