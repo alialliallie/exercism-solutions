@@ -15,22 +15,20 @@ class Game
 
   def score
     ensure_over
-    bonus_rolls = @frames.length == 11
-    total = 0
     # No mutation when scoring
-    frames = @frames.dup
-    until frames.empty?
-      frame = frames.shift
-      total += if strike? frame
-                 10 + next_two_rolls(frames).reduce(&:+)
-               elsif spare? frame
-                 10 + frames.first[0]
-               else
-                 frame.reduce(&:+)
-               end
-      break if bonus_rolls && frames.length == 1
+    frames = @frames.reverse
+    start = frames.length == 11 ? 1 : 0
+    scoring = ScoreState.new(frames)
+    frames[start..-1].each_with_object(scoring) do |frame, state|
+      state.total += frame.reduce(0, &:+)
+      if strike? frame
+        state.total += state.last(2)
+      elsif spare? frame
+        state.total += state.last(1)
+      end
+      state.last_rolls += frame.reverse
     end
-    total
+    scoring.total
   end
 
   private
@@ -99,5 +97,17 @@ class Game
     @frames.length == 10 &&
       !strike?(@frames.last) &&
       !spare?(@frames.last)
+  end
+
+  class ScoreState
+    attr_accessor :total, :last_rolls
+    def initialize(frames)
+      @total = 0
+      @last_rolls = frames.length == 11 ? frames[0] : []
+    end
+
+    def last(n)
+      @last_rolls[-n..-1].reduce(0, &:+)
+    end
   end
 end
