@@ -6,21 +6,17 @@ module Brackets
     brackets
       .scan(BRACKETS)
       .each_with_object([], &method(:check))
-      .length == 0
-    rescue InvalidNesting
-      false
+      .empty?
+  rescue InvalidNesting
+    false
   end
 
-  private
-
   def self.check(char, stack)
-    if left? char
-      stack.push kind(char) 
-    end
+    stack.push kind(char) if left? char
 
     if right? char
-      last = stack.pop 
-      fail InvalidNesting if last != kind(char)
+      last = stack.pop
+      raise InvalidNesting if last != kind(char)
     end
   end
 
