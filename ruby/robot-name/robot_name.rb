@@ -1,18 +1,27 @@
+require 'set'
+
 class Robot
   attr_reader :name
+  @@names = Set.new
 
   def initialize
     @name = rename
   end
 
   def reset
-    begin
-      new_name = rename 
-    end while new_name == name
-    @name = new_name
+    name = rename
+    while name_exists? (name)
+      name = rename
+    end
+    @@names.add(name)
+    @name = name
   end
 
   private
+
+  def name_exists?(name)
+    @@names.include? name
+  end
 
   LETTERS = ('A'..'Z').to_a
   def rename
@@ -21,6 +30,6 @@ class Robot
   end
 
   def prefix
-    [LETTERS.sample, LETTERS.sample].join
+    "#{LETTERS.sample}#{LETTERS.sample}"
   end
 end
