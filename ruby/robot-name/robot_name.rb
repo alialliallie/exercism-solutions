@@ -1,20 +1,17 @@
 require 'set'
 
 class Robot
-  attr_reader :name
+  LETTERS = ('A'..'Z').to_a
+
   @@names = Set.new
 
-  def initialize
-    @name = rename
+  def name
+    reset if @name.nil?
+    @name
   end
 
   def reset
-    name = rename
-    while name_exists? (name)
-      name = rename
-    end
-    @@names.add(name)
-    @name = name
+    @name = unique_name
   end
 
   private
@@ -23,10 +20,19 @@ class Robot
     @@names.include? name
   end
 
-  LETTERS = ('A'..'Z').to_a
-  def rename
-    designation = format('%03d', rand(999))
+  def unique_name
+    name = gen_name
+    name = gen_name while name_exists?(name)
+    @@names.add(name)
+    name
+  end
+
+  def gen_name
     "#{prefix}#{designation}"
+  end
+
+  def designation
+    format('%03d', rand(999))
   end
 
   def prefix
