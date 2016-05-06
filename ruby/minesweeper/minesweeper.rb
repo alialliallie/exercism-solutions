@@ -1,34 +1,42 @@
 class Board
+  ADJACENT = [
+    [1, 0], [0, 1], [-1, 0], [0, -1],
+    [1, 1], [-1, -1], [1, -1], [-1, 1]
+  ].freeze
+
   def self.transform(board)
     Board.new(board).transform
   end
 
-  ADJACENT = [
-    [1, 0], [0, 1], [-1, 0], [0, -1],
-    [1, 1], [-1, -1], [1, -1], [-1, 1]
-  ]
-
   def initialize(mines)
-    @board = mines.reject { |x| x.start_with? '+' }
-                  .map { |x| to_mines(x) }
-    fail ValueError unless valid?
+    # Remove top/bottom border lines, then convert to
+    # internal representation
+    board = mines[1..-2].map(&method(:as_booleans))
+    fail ValueError unless valid?(board)
+
+    @board = board
     @max_x = @board.length
     @max_y = @board[0].length
   end
 
   def transform
-    mapped = @board.each_with_index.map do |mr, x|
-      row = mr.each_with_index.map do |mc, y|
-        mc ? '*' : neighbors(x, y)
-      end.join
-      "|#{row}|"
+    counted_rows = @board.each_with_index.map do |row, x|
+      # Prefer each_with_object to string reduction as insert
+      # mutates the original string :(
+      row.each_with_object('||').with_index do |(has_mine, a), y|
+        a.insert(-2, has_mine ? '*' : neighbor_count(x, y).to_s)
+      end
     end
-    [border] + mapped + [border]
+    [border] + counted_rows + [border]
   end
 
-  def to_mines(row)
-    fail ValueError unless row =~ /\|[ *0-9]+\|/
-    row.chars.reject { |c| c == '|' }.map { |c| c == '*' }
+  private
+
+  # Represent mine/not-mine with a boolean, removing borders.
+  # '| * * |' -> [false, true, false, true, false]
+  def as_booleans(row)
+    fail ValueError unless row =~ /\A\|[ *]+\|\z/
+    row[1..-2].each_char.map { |c| c == '*' }
   end
 
   def lookup(x, y)
@@ -37,20 +45,20 @@ class Board
     @board[x][y]
   end
 
-  def neighbors(x, y)
-    total = ADJACENT.reduce(0) do |mines, (dx, dy)|
-      val = lookup(x + dx, y + dy)
-      val ? mines + 1 : mines
+  def neighbor_count(x, y)
+    mine_count = ADJACENT.count do |dx, dy|
+      lookup(x + dx, y + dy)
     end
-    total <= 0 ? ' ' : total
+    mine_count <= 0 ? ' ' : mine_count
   end
 
+  # Generate top/bottom border of the form +-----+
   def border
-    "+" + (0..(@board[0].length - 1)).map {|_| '-'}.join + "+"
+    '+' + ('-' * @max_y) + '+'
   end
 
-  def valid?
-    @board.map(&:length).uniq.length == 1
+  def valid?(board)
+    board.map(&:length).uniq.length == 1
   end
 end
 
