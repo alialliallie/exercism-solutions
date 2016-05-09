@@ -3,8 +3,5 @@
 #
 
 
-def hello(name=''):
-    entity = 'World'
-    if name != '':
-        entity = name
-    return 'Hello, {}!'.format(entity)
+def hello(name='World'):
+    return 'Hello, {}!'.format(name)
