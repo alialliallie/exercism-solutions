@@ -44,4 +44,10 @@ guard :shell do
       `cd go/#{m[1]} && go test`
     end
   end
+
+  # Python
+  watch %r{^python/(.*)/(.*)\.py$} do |m|
+    exercise = m[1].tr('-','_')
+    `cd python/#{m[1]} && py.test #{exercise}_test.py`
+  end
 end
