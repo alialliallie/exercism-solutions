@@ -50,4 +50,10 @@ guard :shell do
     exercise = m[1].tr('-','_')
     `cd python/#{m[1]} && py.test #{exercise}_test.py`
   end
+
+  # Scala
+  watch %r{^scala/(.*)/(.*)\.scala$} do |m|
+    exercise = m[1].tr('-','_')
+    `cd scala/#{m[1]} && sbt test`
+  end
 end
