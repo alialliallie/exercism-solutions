@@ -6,6 +6,8 @@
 
 (def alphabet (char-range \A \Z))
 
+(def used-names (atom #{}))
+
 (defn- prefix
   []
   (str (rand-nth alphabet) (rand-nth alphabet)))
@@ -18,13 +20,22 @@
   []
   (str (prefix) (serial)))
 
+(defn- unique-name
+  []
+  (loop [new-name (gen-name)]
+    (if (@used-names new-name)
+      (recur (gen-name))
+      (do
+        (swap! used-names conj new-name)
+        new-name))))
+
 (defn robot
   []
-  {:name (gen-name)})
+  {:name (unique-name)})
 
 (defn reset-name
   [bot]
-  (assoc bot :name (gen-name)))
+  (assoc bot :name (unique-name)))
 
 (defn robot-name
   [bot]
