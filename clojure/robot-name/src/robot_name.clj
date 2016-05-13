@@ -8,7 +8,7 @@
 
 (defn- prefix
   []
-  (str (rand-int alphabet) (rand-int alphabet)))
+  (str (rand-nth alphabet) (rand-nth alphabet)))
 
 (defn- serial
   []
@@ -24,7 +24,7 @@
 
 (defn reset-name
   [bot]
-  (assoc bot :name gen-name))
+  (assoc bot :name (gen-name)))
 
 (defn robot-name
   [bot]
