@@ -1,25 +1,24 @@
 (ns scrabble-score)
 
-(def raw-score {["A", "E", "I", "O", "U", "L", "N", "R", "S", "T"]      1
-                ["D", "G"                        ]      2
-                ["B", "C", "M", "P"                  ]      3
-                ["F", "H", "V", "W", "Y"               ]      4
-                ["K"                           ]      5
-                ["J", "X"                        ]      8
-                ["Q", "Z"                       ]      10 })
+(def raw-score {"AEIOULNRST" 1
+                "DG"         2
+                "BCMP"       3
+                "FHVWY"      4
+                "K"          5
+                "JX"         8
+                "QZ"         10})
 
 
-;; this is terribly named things that worked in the repl
+(defn- accumulate-pairs
+  "Convert letters and score into [letter score] pairs and accumulate."
+  [pairs letters score] 
+  (conj pairs (reduce 
+                (fn [a letter] (conj a [letter score])) 
+                [] 
+                letters)))
+
 (def score 
-  (into {} (apply concat 
-                  (reduce-kv 
-                    (fn [a k v] 
-                      (conj a (reduce 
-                                (fn [ac kk]
-                                  (conj ac [kk v])) [] k)))
-                    [] raw-score))))
-
-
+  (into {} (apply concat (reduce-kv accumulate-pairs [] raw-score))))
 
 (defn score-letter
   [letter]
