@@ -9,16 +9,10 @@
                 "QZ"         10})
 
 
-(defn- accumulate-pairs
-  "Convert letters and score into [letter score] pairs and accumulate."
-  [pairs letters score] 
-  (conj pairs (reduce 
-                (fn [a letter] (conj a [letter score])) 
-                [] 
-                letters)))
-
-(def score 
-  (into {} (apply concat (reduce-kv accumulate-pairs [] raw-score))))
+(def score
+  (into {} (for [[letters score] raw-score
+                 letter letters]
+            [letter score])))
 
 (defn score-letter
   [letter]
