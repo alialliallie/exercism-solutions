@@ -1,2 +1,7 @@
 def distance(first, second):
-    return len([i for i in zip(first, second) if i[0] != i[1]])
+    # True counts as 1 and False as 0
+    return sum(map(not_equal, first, second))
+
+def not_equal(first, second):
+    return first != second
+
