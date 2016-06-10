@@ -56,4 +56,10 @@ guard :shell do
     exercise = m[1].tr('-','_')
     `cd scala/#{m[1]} && sbt test`
   end
+
+  # Haskell
+  watch %r{^haskell/(.*)/(.*)\.hs$} do |m|
+    exercise = m[1].tr('-','_')
+    `cd haskell/#{m[1]} && runhaskell -Wall #{exercise}_test.hs`
+  end
 end
