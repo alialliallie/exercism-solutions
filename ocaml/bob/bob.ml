@@ -8,9 +8,7 @@ let is_yelling remark =
         has_alpha && String.uppercase remark = remark
 
 let is_silence remark =
-    match String.strip remark with
-    | "" -> true
-    | _ -> false
+    String.is_empty(String.strip remark)
 
 let response_for remark =
     match remark with
