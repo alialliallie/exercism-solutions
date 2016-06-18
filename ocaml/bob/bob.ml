@@ -12,7 +12,7 @@ let is_silence remark =
 
 let response_for remark =
     match remark with
-    | _ when is_silence(remark) -> "Fine. Be that way!"
-    | _ when is_yelling(remark) -> "Whoa, chill out!"
-    | _ when is_question(remark) -> "Sure."
+    | _ when is_silence remark -> "Fine. Be that way!"
+    | _ when is_yelling remark -> "Whoa, chill out!"
+    | _ when is_question remark  -> "Sure."
     | _ -> "Whatever."
