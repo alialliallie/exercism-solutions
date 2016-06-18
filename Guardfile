@@ -62,4 +62,9 @@ guard :shell do
     exercise = m[1].tr('-','_')
     `cd haskell/#{m[1]} && runhaskell -Wall #{exercise}_test.hs`
   end
+
+  # OCaml
+  watch %r{^ocaml/(.*)/(.*)\.mli?$} do |m|
+    `cd ocaml/#{m[1]} && make`
+  end
 end
