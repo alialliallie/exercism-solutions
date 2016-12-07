@@ -1,5 +1,5 @@
 class Clock
-  ONE_DAY = 60 * 24
+  ONE_DAY = 24 * 60
 
   def self.at(hour, minutes = 0)
     Clock.new(hour, minutes)
@@ -10,24 +10,17 @@ class Clock
   end
 
   def to_s
-    h = (@minutes / 60).to_s.rjust(2, '0')
-    m = (@minutes % 60).to_s.rjust(2, '0')
-    "#{h}:#{m}"
+    h = (minutes / 60)
+    m = (minutes % 60)
+    sprintf("%02d:%02d", h, m)
   end
 
   def +(m)
-    @minutes += m
-    if @minutes > ONE_DAY
-      @minutes %= ONE_DAY
-    end
-    if @minutes < 0
-      @minutes = ONE_DAY + @minutes
-    end
-    self
+    Clock.at(0, minutes + m)
   end
 
   def -(m)
-    self + -m
+    Clock.at(0, minutes - m)
   end
 
   def ==(other)
@@ -36,5 +29,7 @@ class Clock
 
   protected
 
-  attr_reader :minutes
+  def minutes
+    @minutes % ONE_DAY
+  end
 end
