@@ -28,18 +28,15 @@ from_tree(T) -> {zip, [], T}.
 -spec to_tree(zipper()) -> tree().
 to_tree({zip, [], Tree}) -> Tree;
 to_tree({zip, [Step|Path], T}) -> 
-    Tree = retrace_step(Step, T),
-    to_tree({zip, Path, Tree}).
+    to_tree({zip, Path, retrace_step(Step, T)}).
 
 % Reconstruct the previous tree given a Step (left/right action) and the
 % currently focused subtree.
 -spec retrace_step(path_elem(), tree()) -> value_node().
 retrace_step({_, nil}, Tree) -> Tree;
-retrace_step({left, LT}, Tree) ->
-    {node, V, _, R} = LT,
+retrace_step({left, {node, V, _, R}}, Tree) ->
     new_tree(V, Tree, R);
-retrace_step({right, RT}, Tree) ->
-    {node, V, L, _} = RT,
+retrace_step({right, {node, V, L, _}}, Tree) ->
     new_tree(V, L, Tree).
 
 -spec left(zipper()) -> zipper() | empty_node().
