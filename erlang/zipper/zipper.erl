@@ -4,7 +4,7 @@
 -export([empty/0, new_tree/3]).
 
 % Zipper functions
--export([from_tree/1, to_tree/1, left/1, right/1, up/1, 
+-export([from_tree/1, to_tree/1, left/1, right/1, up/1,
          value/1, set_value/2, set_left/2, set_right/2]).
 
 % The tests assume `nil` is the empty node atom.
@@ -27,7 +27,7 @@ from_tree(T) -> {zip, [], T}.
 % Recursively rebuild the tree by retracing previous steps
 -spec to_tree(zipper()) -> tree().
 to_tree({zip, [], Tree}) -> Tree;
-to_tree({zip, [Step|Path], T}) -> 
+to_tree({zip, [Step|Path], T}) ->
     to_tree({zip, Path, retrace_step(Step, T)}).
 
 % Reconstruct the previous tree given a Step (left/right action) and the
@@ -41,13 +41,13 @@ retrace_step({right, {node, V, L, _}}, Tree) ->
 
 -spec left(zipper()) -> zipper() | empty_node().
 left({zip, _Path, {node, _V, nil = L, _R}}) -> L;
-left({zip, Path, {node, V, L, R}}) -> 
+left({zip, Path, {node, V, L, R}}) ->
     T = new_tree(V, empty(), R),
     {zip, [{left, T}|Path], L}.
 
 -spec right(zipper()) -> zipper() | empty_node().
 right({zip, _Path, nil = T}) -> T;
-right({zip, Path, {node, V, L, R}}) -> 
+right({zip, Path, {node, V, L, R}}) ->
     T = new_tree(V, L, empty()),
     {zip, [{right, T}|Path], R}.
 
