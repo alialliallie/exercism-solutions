@@ -67,4 +67,9 @@ guard :shell do
   watch %r{^ocaml/(.*)/(.*)\.mli?$} do |m|
     `cd ocaml/#{m[1]} && make`
   end
+
+  # Crystal
+  watch %r{^crystal/(.*)/(src|spec)/(.*)\.cr$} do |m|
+    `cd crystal/#{m[1]} && crystal spec`
+  end
 end
