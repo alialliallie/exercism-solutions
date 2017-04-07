@@ -5,8 +5,7 @@ class Anagram(val word: String) {
     others.filter(isAnagram(_))
 
   private def isAnagram(other: String): Boolean =
-    other.toLowerCase != word.toLowerCase &&
-      normalizedWord == normalize(other)
+    !other.equalsIgnoreCase(word) && normalizedWord == normalize(other)
 
   private def normalize(word: String) =
     word.toLowerCase.sorted
