@@ -6,27 +6,20 @@ object RunLengthEncoding {
 
   def encode(str: String): String = {
 
-    def doEncode(str: List[Char], out: String, last: Option[Char], n: Int): String =
-      str match {
-        case Seq() =>
-          append(out, last, n)
-        case (c: Char) :: (rest: List[Char]) if n == 0 =>
-          doEncode(rest, out, Some(c), 1)
-        case (c: Char) :: (rest: List[Char]) if last.contains(c) =>
-          doEncode(rest, out, Some(c), n + 1)
-        case str =>
-          doEncode(str, append(out, last, n), last, 0)
+    @scala.annotation.tailrec
+    def doEncode(str: String, out: String): String =
+      str.span(_ == str.head) match {
+        case ("", "") => out
+        case (prefix, suffix) => doEncode(suffix, append(out, prefix))
       }
 
-
-    def append(out: String, c: Option[Char], n: Int): String =
-      (c, n) match {
-        case (Some(c), 1) => out + c
-        case (Some(c), _) => out + n + c
-        case (None, _) => out
+    def append(out: String, prefix: String): String =
+      prefix.length match {
+        case 1 => out + prefix.head
+        case _ => out + prefix.length + prefix.head
       }
 
-    doEncode(str.toList, "", None, 0)
+    doEncode(str, "")
   }
 
 
