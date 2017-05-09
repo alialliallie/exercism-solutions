@@ -13,9 +13,9 @@ object BinarySearch {
       else if (begin == end)
         None
       else if (candidate > target)
-        doSearch(items, target, begin, Seq(0, midPoint - 1).max)
+        doSearch(items, target, begin, Math.max(0, midPoint - 1))
       else
-        doSearch(items, target, Seq(midPoint + 1, items.length -1).min, end)
+        doSearch(items, target, Math.min(midPoint + 1, items.length -1), end)
     }
 
     if (items.isEmpty)
