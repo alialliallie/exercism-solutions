@@ -7,9 +7,9 @@ object Scrabble {
     5 -> Seq('K'),
     8 -> Seq('J', 'X'),
     10 -> Seq('Q', 'Z')
-  ).flatMap { case (s, ls) => ls.map { _ -> s} }
+  ).flatMap { case (s, ls) => ls.map {_ -> s} }
 
   def scoreLetter(letter: Char): Int = scores(letter.toUpper)
 
-  def scoreWord(word: String): Int = word.toUpperCase.map(scores(_)).reduce(_ + _)
+  def scoreWord(word: String): Int = word.map(scoreLetter).sum
 }
