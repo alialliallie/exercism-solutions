@@ -1,3 +1,5 @@
+import scala.util.Try
+
 object Dna {
   val rna = Map(
     'G' -> 'C',
@@ -5,8 +7,6 @@ object Dna {
     'T' -> 'A',
     'A' -> 'U'
   )
-  def toRna(sequence: String): Option[String] =
-    Some(sequence)
-      .filter(_.toSet.diff(rna.keySet).isEmpty)
-      .map(s => s.map(rna))
+
+  def toRna(sequence: String): Option[String] = Try(sequence.map(rna)).toOption
 }
