@@ -33,3 +33,7 @@ class Clock
     @minutes % ONE_DAY
   end
 end
+
+module BookKeeping
+  VERSION = 2
+end
