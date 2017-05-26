@@ -1,5 +1,3 @@
-import scala.util.Try
-
 object Dna {
   val rna = Map(
     'G' -> 'C',
@@ -8,5 +6,13 @@ object Dna {
     'A' -> 'U'
   )
 
-  def toRna(sequence: String): Option[String] = Try(sequence.map(rna)).toOption
+  def toRna(sequence: String): Option[String] = {
+    val getRna: (Option[String], Char) => Option[String] = {
+      case (Some(translated), c) if rna.keySet.contains(c) =>
+        Some(translated + rna(c))
+      case (_, _) =>
+        None
+    }
+    sequence.foldLeft(Option(""))(getRna)
+  }
 }
