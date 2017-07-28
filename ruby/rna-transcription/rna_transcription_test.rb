@@ -1,7 +1,8 @@
 require 'minitest/autorun'
 require_relative 'rna_transcription'
 
-class ComplementTest < Minitest::Test
+# Common test data version: 1.0.0 0b20fff
+class RnaTranscriptionTest < Minitest::Test
   def test_rna_complement_of_cytosine_is_guanine
     assert_equal 'G', Complement.of_dna('C')
   end
@@ -22,31 +23,36 @@ class ComplementTest < Minitest::Test
     assert_equal 'UGCACCAGAAUU', Complement.of_dna('ACGTGGTCTTAA')
   end
 
-  def test_dna_complement_of_cytosine_is_guanine
-    assert_equal 'G', Complement.of_rna('C')
+  def test_dna_correctly_handles_invalid_input
+    assert_equal '', Complement.of_dna('U')
   end
 
-  def test_dna_complement_of_guanine_is_cytosine
-    assert_equal 'C', Complement.of_rna('G')
+  def test_dna_correctly_handles_completely_invalid_input
+    assert_equal '', Complement.of_dna('XXX')
   end
 
-  def test_dna_complement_of_uracil_is_adenine
-    assert_equal 'A', Complement.of_rna('U')
+  def test_dna_correctly_handles_partially_invalid_input
+    assert_equal '', Complement.of_dna('ACGTXXXCTTAA')
   end
 
-  def test_dna_complement_of_adenine_is_thymine
-    assert_equal 'T', Complement.of_rna('A')
-  end
+  # Problems in exercism evolve over time, as we find better ways to ask
+  # questions.
+  # The version number refers to the version of the problem you solved,
+  # not your solution.
+  #
+  # Define a constant named VERSION inside of the top level BookKeeping
+  # module, which may be placed near the end of your file.
+  #
+  # In your file, it will look like this:
+  #
+  # module BookKeeping
+  #   VERSION = 1 # Where the version number matches the one in the test.
+  # end
+  #
+  # If you are curious, read more about constants on RubyDoc:
+  # http://ruby-doc.org/docs/ruby-doc-bundle/UsersGuide/rg/constants.html
 
-  def test_dna_complement
-    assert_equal 'ACTTGGGCTGTAC', Complement.of_rna('UGAACCCGACAUG')
-  end
-
-  def test_dna_raises_argument_error
-    assert_raises(ArgumentError){ Complement.of_dna('U') }
-  end
-
-  def test_rna_raises_argument_error
-    assert_raises(ArgumentError){ Complement.of_rna('T') }
+  def test_bookkeeping
+    assert_equal 4, BookKeeping::VERSION
   end
 end

@@ -5,15 +5,18 @@ class Complement
     "T" => "A",
     "A" => "U"
   }
-  RNA_TO_DNA = DNA_TO_RNA.invert
 
   def self.of_dna(sequence)
-    raise ArgumentError if sequence.match(/U/)
-    sequence.chars.map {|nucleo| DNA_TO_RNA[nucleo]}.join('')
+    return '' unless valid?(sequence)
+    sequence.chars.map {|nucleotide| DNA_TO_RNA[nucleotide]}.join('')
   end
 
-  def self.of_rna(sequence)
-    raise ArgumentError if sequence.match(/T/)
-    sequence.chars.map {|nucleo| RNA_TO_DNA[nucleo]}.join('')
+  private
+  def self.valid?(sequence)
+    sequence.chars.all? { |c| DNA_TO_RNA.keys.include? c }
   end
+end
+
+module BookKeeping
+  VERSION = 4
 end
