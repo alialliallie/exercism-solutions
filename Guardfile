@@ -74,7 +74,7 @@ guard :shell do
   end
 
   # Elixir
-  watch %r{^elixir/(.*)/(.*)(_test)?.exs$} do |m|
+  watch %r{^elixir/(.*)/((?!_test).*?)(_test)?.exs$} do |m|
     `cd elixir/#{m[1]} && elixir #{m[2]}_test.exs`
   end
 end
