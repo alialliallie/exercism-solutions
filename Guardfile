@@ -72,4 +72,9 @@ guard :shell do
   watch %r{^crystal/(.*)/(src|spec)/(.*)\.cr$} do |m|
     `cd crystal/#{m[1]} && crystal spec`
   end
+
+  # Elixir
+  watch %r{^elixir/(.*)/(.*)(_test)?.exs$} do |m|
+    `cd elixir/#{m[1]} && elixir #{m[2]}_test.exs`
+  end
 end
