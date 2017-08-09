@@ -25,20 +25,29 @@ defmodule SecretHandshake do
   """
   @spec commands(code :: integer) :: list(String.t())
   def commands(code) do
-    if band(code, @reverse) == @reverse do
-      Enum.flat_map(@command_flags, fn ({flag, _}) -> flagged(code, flag) end)
-      |> Enum.reverse
-    else
-      Enum.flat_map(@command_flags, fn ({flag, _}) -> flagged(code, flag) end)
-    end
+    is_reverse = band(code, @reverse) == @reverse
+    actions = Enum.reduce(@command_flags, [],
+                          SecretHandshake.reducer(code, is_reverse))
   end
 
-  def flagged(code, flag) when band(code, flag) == flag do
-    [@command_flags[flag]]
+  def reducer(code, reverse) when reverse do
+    fn (x, xs) -> SecretHandshake.add_action(:prepend, code, x, xs) end
   end
 
-  def flagged(code, flag) when band(code, flag) != flag do
-    []
+  def reducer(code, reverse) do
+    fn (x, xs) -> SecretHandshake.add_action(:append, code, x, xs) end
+  end
+
+  def add_action(:prepend, code, {flag, action}, acc) when band(code, flag) == flag do
+    [action] ++ acc
+  end
+
+  def add_action(:append, code, {flag, action}, acc) when band(code, flag) == flag do
+    acc ++ [action]
+  end
+
+  def add_action(_, _, _, acc) do
+    acc
   end
 end
 
