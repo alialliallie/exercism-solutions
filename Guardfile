@@ -60,7 +60,7 @@ guard :shell do
   # Haskell
   watch %r{^haskell/(.*)/(.*)\.hs$} do |m|
     exercise = m[1].tr('-','_')
-    `cd haskell/#{m[1]} && runhaskell -Wall #{exercise}_test.hs`
+    `cd haskell/#{m[1]} && stack test`
   end
 
   # OCaml
