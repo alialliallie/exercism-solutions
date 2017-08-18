@@ -1,24 +1,18 @@
 module Bob (responseFor) where
 
-import Data.Char as Char
+import qualified Data.Char as C
+import qualified Data.Text as T
 
-hasAlpha :: String -> Bool
-hasAlpha remark = any Char.isAlpha remark
-
-shouting :: String -> Bool
+shouting :: T.Text -> Bool
 shouting remark = 
-    remark == upper && (hasAlpha remark)
-    where upper = map Char.toUpper remark
+  remark == (T.toUpper remark) && (hasAlpha remark)
+  where hasAlpha = T.any C.isAlpha
 
-question :: String -> Bool
-question remark = (last remark) == '?'
+question :: T.Text -> Bool
+question = (== '?') . T.last
 
-silent :: String -> Bool
-silent remark = all Char.isSpace remark
-
-trim :: String -> String
-trim = f . f
-  where f = reverse . dropWhile Char.isSpace
+silent :: T.Text -> Bool
+silent = T.all C.isSpace
 
 responseFor :: String -> String
 responseFor remark 
@@ -26,5 +20,5 @@ responseFor remark
   | shouting r = "Whoa, chill out!"
   | question r = "Sure."
   | otherwise  = "Whatever."
-  where r = trim remark
+  where r = T.strip (T.pack remark)
 
